@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AJAX by jQuery</title>
+</head>
+<body>
+    
+    <h1>Les Posts</h1>
+
+    <button id="get-posts">Afficher les posts</button>
+
+    <hr>
+
+    <!-- Affichage de la liste des posts -->
+    <div id="posts"></div>
+
+    <!-- Template pour l'affichage d'un post -->
+    <template id="post">
+        <h3>{post_title} <small>(#{post_id})</small></h3>
+        <p>{post_content}</p>
+        <hr>
+    </template>
+
+    <!-- Script Vendor -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    
+
+
+    <!-- Script Custom -->
+    <script>
+    // https://jsonplaceholder.typicode.com/posts
+    $(document).ready(() => {
+
+        // Bouton
+        $btn = $('#get-posts');
+
+        // Conteneur des posts
+        $container = $('#posts');
+
+        // Template d'un post
+        $tpl = $('#post');
+
+        // Evenement de clique sur le bouton
+        $btn.on('click', () => {
+
+            $
+                // Execution d'un requete assynchrone
+                .ajax('https://jsonplaceholder.typicode.com/posts')
+
+                // Code a executer lorsque la requete se passe bien
+                // Code HTTP : 200
+                .done((response) => {
+                    $(response).each((index, item) => {
+                        $item = $tpl.html()
+                            .replace(/{post_id}/, item.id)
+                            .replace(/{post_title}/, item.title)
+                            .replace(/{post_content}/, item.body)
+                        ;
+
+                        $container.append($item);
+                    });
+                })
+
+                // Code a executer lorsque la requete est en echec
+                .fail(() => {
+                    console.log("Erreur lors de la requete.");
+                })
+
+                // Code a toujours executer, peu importe le code HTTP
+                .always(() => {
+                    console.log("Je m'execute toujours lorsque la requete est terminée.");
+                })
+            ;
+
+        });
+
+    });
+    </script>
+</body>
+</html>
