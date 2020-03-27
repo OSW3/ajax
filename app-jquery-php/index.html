@@ -14,11 +14,11 @@
 
     <hr> 
 
-    <form>
+    <form onsubmit="return false;">
         <label for="hero-name">Nom du Héro</label>
         <input type="text" name="hero-name" id="hero-name">
         <br>
-        <button id="add-hero">Ajouter</button>
+        <button type="button" id="add-hero">Ajouter</button>
     </form>
 
     <hr>
@@ -50,34 +50,64 @@
     <script>
     $(document).ready(() => {
 
+        $btnAdd = $('#add-hero');
+        $hero = $('#hero-name');
+
         // Affiche la liste des heros au chargement de la page
-        showHeros();
+        getHeros();
+
+        $btnAdd.on('click', () => {
+
+            // console.log( $hero.val() );
+
+            $.ajax({
+                url: "hero.php",
+                method: "POST",
+                data: {
+                    name: $hero.val()
+                }
+            }).always(response => {
+
+                // console.log(response);
+                showHeros(response);
+
+            });
+
+        });
 
     });
 
-    function showHeros()
+    function getHeros()
     {
-        $container = $('#heros').find('tbody');
-        $tpl = $('#row-hero');
-
         $.ajax({
             url: "hero.php",
             method: "GET",
             type: "json",
             success: response => {
 
-                console.log(response);
+                showHeros(response)
 
-                $(response).each((index, hero) => {
-
-                    $item = $tpl.html()
-                        .replace(/{hero_id}/, index)
-                        .replace(/{hero_name}/, hero.name)
-                    ;
-
-                    $container.append($item);
-                });
             }
+        });
+    }
+
+    function showHeros(response)
+    {
+        console.log(response);
+
+        $container  = $('#heros').find('tbody');
+        $tpl        = $('#row-hero');
+
+        $container.html('');
+
+        $(response).each((index, hero) => {
+
+            $item = $tpl.html()
+                .replace(/{hero_id}/, index)
+                .replace(/{hero_name}/, hero.name)
+            ;
+
+            $container.append($item);
         });
     }
     </script>
