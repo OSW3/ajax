@@ -1,0 +1,28 @@
+(index.html)
+
+Créer un formulaire avec les champs
+- firstname 
+- lastname
+
+Envoyer les données du formulaire dans la base de données via AJAX et PHP 
+
+Afficher la liste des utilisateurs dans un tableau, en dessous du formulaire
+
+
+
+(user.php)
+
+Si METHOD = POST
+- Recupération des données du formulaire , envoyées par AJAX.
+- Enregistrement des données dans la BDD 
+
+Dans tous les cas (GET ou POST)
+- Récupération des données dans la BDD, puis affichage des données dans une chaine JSON.
+
+
+
+(MySQl)
+
+Création d'une table 'user' avec les champs
+- firstname 
+- lastname
