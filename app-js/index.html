@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AJAX by JavaScript</title>
+</head>
+<body>
+    
+    <h1>Les Posts</h1>
+
+    <button id="get-posts">Afficher les posts</button>
+
+    <hr>
+
+    <!-- Affichage de la liste des posts -->
+    <div id="posts"></div>
+
+    <!-- Template pour l'affichage d'un post -->
+    <template id="post">
+        <h3>{post_title} <small>(#{post_id})</small></h3>
+        <p>{post_content}</p>
+        <hr>
+    </template>
+
+    <!-- Script Custom -->
+    <script>
+    // https://jsonplaceholder.typicode.com/posts
+
+        var xhr;
+        var btn         = document.getElementById('get-posts');
+        var container   = document.getElementById('posts');
+        var tpl         = document.getElementById('post');
+
+        btn.addEventListener('click', function() {
+            
+            if (window.XMLHttpRequest) 
+            {
+                // Pour les navigateur moderne
+                xhr = new XMLHttpRequest();
+            }
+            else
+            {
+                // Pour les anciens navigateurs
+                xhr = new ActiveXObject('Microsoft.XMLHTTP');
+            }
+
+            /**
+             * Préparation de la requete
+             * @param string method : GET | POST
+             * @param string url
+             * @param bool async
+             */  
+            xhr.open("GET", "https://jsonplaceholder.typicode.com/posts", true);
+
+            /**
+             * Envois de la requete
+             */ 
+            xhr.send();
+
+            /**
+             * Ecoute des etats de la requete
+             */
+            xhr.onreadystatechange = function() {
+                
+                /*
+                switch (this.readyState) 
+                {
+                    // Requete n'est pas initialisée
+                    case 0:
+                        console.log("Etat : 0");
+                        console.log(this.status);
+                        break;
+                    
+                    // Connexion etablie avec le serveur
+                    case 1:
+                        console.log("Etat : 1");
+                        console.log(this.status);
+                        break;
+                    
+                    // Requete reçue par le serveur
+                    case 2:
+                        console.log("Etat : 2");
+                        console.log(this.status);
+                        break;
+
+                    // Traitement de la requete par le serveur
+                    case 3:
+                        console.log("Etat : 3");
+                        console.log(this.status);
+                        break;
+                    
+                    // La requete est terminée, la péponse du serveur est reçue
+                    case 4:
+                        console.log("Etat : 4");
+                        console.log(this.status);
+                        break;
+                }
+                */
+
+                /**
+                 * Récupération de la réponse
+                 */
+                if (this.readyState == 4 && this.status == 200)
+                {
+                    var items = JSON.parse(this.responseText);
+
+                    for (var i=0; i<items.length; i++)
+                    {
+                        var item = items[i];
+
+                        var $tpl = tpl.innerHTML
+                            .replace(/{post_id}/, item.id)
+                            .replace(/{post_title}/, item.title)
+                            .replace(/{post_content}/, item.body)
+                        ;
+
+                        container.insertAdjacentHTML('beforeend', $tpl);
+                    }
+                }
+            }
+
+        });
+
+    </script>
+</body>
+</html>

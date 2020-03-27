@@ -51,7 +51,7 @@
 
                 // Code a executer lorsque la requete se passe bien
                 // Code HTTP : 200
-                .done((response) => {
+                .done( response => {
                     $(response).each((index, item) => {
                         $item = $tpl.html()
                             .replace(/{post_id}/, item.id)
