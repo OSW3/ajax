@@ -45,10 +45,14 @@
         // Evenement de clique sur le bouton
         $btn.on('click', () => {
 
-            /*
             $
                 // Execution d'un requete assynchrone
-                .ajax('https://jsonplaceholder.typicode.com/posts')
+                .getJSON('https://jsonplaceholder.typicode.com/posts')
+                // .ajax({
+                    // url: 'https://jsonplaceholder.typicode.com/posts',
+                    // method: "GET",
+                    // type: "json",
+                // })
 
                 // Code a executer lorsque la requete se passe bien
                 // Code HTTP : 200
@@ -74,45 +78,6 @@
                     console.log("Je m'execute toujours lorsque la requete est terminée.");
                 })
             ;
-            */
-
-            $.ajax({
-                url: "https://jsonplaceholder.typicode.com/posts",
-                method: "GET",
-                statusCode: {
-                    /*200: response => {
-                        $(response).each((index, item) => {
-                            $item = $tpl.html()
-                                .replace(/{post_id}/, item.id)
-                                .replace(/{post_title}/, item.title)
-                                .replace(/{post_content}/, item.body)
-                            ;
-
-                            $container.append($item);
-                        });
-                    },*/
-                    403: () => { // Forbiden
-                        // ... code a executer sur erreur 403
-                    },
-                    404: () => { // Not Found
-                        // ... code a executer sur erreur 404
-                    },
-                    500: () => { // Server error
-                        // ... code a executer sur erreur 500
-                    }
-                },
-                success: response => {
-                    $(response).each((index, item) => {
-                        $item = $tpl.html()
-                            .replace(/{post_id}/, item.id)
-                            .replace(/{post_title}/, item.title)
-                            .replace(/{post_content}/, item.body)
-                        ;
-
-                        $container.append($item);
-                    });
-                }
-            });
 
         });
 

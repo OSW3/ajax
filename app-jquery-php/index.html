@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base href="/app-jquery-php/">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AJAX Heros</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+</head>
+<body>
+    
+    <h1>Les super Héros</h1>
+
+    <hr> 
+
+    <form>
+        <label for="hero-name">Nom du Héro</label>
+        <input type="text" name="hero-name" id="hero-name">
+        <br>
+        <button id="add-hero">Ajouter</button>
+    </form>
+
+    <hr>
+    
+    <table id="heros" class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Hero</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <!-- Template pour l'affichage d'un post -->
+    <template id="row-hero">
+        <tr>
+            <td>{hero_id}</td>
+            <td>{hero_name}</td>
+        </tr>
+    </template>
+
+    <!-- Script Vendor -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    
+
+
+    <!-- Script Custom -->
+    <script>
+    $(document).ready(() => {
+
+        // Affiche la liste des heros au chargement de la page
+        showHeros();
+
+    });
+
+    function showHeros()
+    {
+        $container = $('#heros').find('tbody');
+        $tpl = $('#row-hero');
+
+        $.ajax({
+            url: "hero.php",
+            method: "GET",
+            type: "json",
+            success: response => {
+
+                console.log(response);
+
+                $(response).each((index, hero) => {
+
+                    $item = $tpl.html()
+                        .replace(/{hero_id}/, index)
+                        .replace(/{hero_name}/, hero.name)
+                    ;
+
+                    $container.append($item);
+                });
+            }
+        });
+    }
+    </script>
+</body>
+</html>
