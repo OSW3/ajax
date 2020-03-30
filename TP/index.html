@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TP AJAX</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+
+    <style>
+    .alert,
+    #loader {
+        display: none;
+    }
+    </style>
+</head>
+<body>
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-4 offset-4">
+
+                <div class="alert alert-danger">
+                    Oups.... 
+                </div>
+
+                <form onsubmit="return false;">
+            
+                    <div class="form-group">
+                        <label for="firstname">Firstname</label>
+                        <input class="form-control" type="text" id="firstname">
+                    </div>
+            
+                    <div class="form-group">
+                        <label for="lastname">Lastname</label>
+                        <input class="form-control" type="text" id="lastname">
+                    </div>
+            
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <span id="loader">Envois en cours...</span>
+                </form>
+
+            </div>
+        </div>
+
+        <hr>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Firstname</th>
+                    <th>Lastname</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <template>
+        <tr>
+            <td>{user_id}</td>
+            <td>{user_firstname}</td>
+            <td>{user_lastname}</td>
+        </tr>
+    </template>
+
+    <!-- Script Vendor -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+    <!-- Custom Script -->
+    <script>
+    $(document).ready(function(){
+
+        // Récupération des éléments HTML
+        $loader   = $('#loader');
+        $alert    = $('.alert');
+        $btn      = $('button');
+        $target   = $('table > tbody');
+        $template = $('template');
+
+        // Affiche la liste des utilisateurs au chargement de la page
+        getUsers();
+
+        // Ajoute un utilisateur au clic sur le bouton
+        $btn.on('click', submit);
+        
+    });
+
+    // Form submission
+    function submit() {
+
+        var hasError = false;
+
+        $alert.hide();
+        $loader.show();
+        $btn.attr('disabled', "disabled");
+
+        $firstname = $('#firstname');
+        $lastname  = $('#lastname');
+
+        // Form control
+        // ...
+
+        if (!hasError)
+        {
+            addUser({
+                firstname: $firstname.val(),
+                lastname: $lastname.val()
+            });
+        }
+    }
+
+    function addUser(user)
+    {
+        $.ajax({
+            url: "users.php",
+            method: "POST",
+            data: user,
+            success: getUsers,
+            error: formError
+        }).always(function(response){
+
+            $loader.hide();
+            $btn.attr('disabled', false);
+
+            // Reset Form
+            if (response.status == "success")
+            {
+                $firstname.val('');
+                $lastname.val('');
+            }
+
+        });
+    }
+
+    function formError()
+    {
+        $alert.show();
+    }
+
+    function getUsers()
+    {
+        $.ajax({
+            url: "users.php",
+            method: "GET",
+            success: refreshTable
+        });
+    }
+
+    function refreshTable(response)
+    {
+        $target.html('');
+
+        $(response).each((index, user) => {
+
+            $item = $template.html()
+                .replace(/{user_id}/, user.id)
+                .replace(/{user_firstname}/, user.firstname)
+                .replace(/{user_lastname}/, user.lastname)
+            ;
+
+            $target.append($item);
+        });
+    }
+
+    </script>
+
+</body>
+</html>
