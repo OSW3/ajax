@@ -13,13 +13,63 @@
     -->
     
     <nav>
-        <a href="javascript:void();">Page A</a>
-        <a href="javascript:void();">Page B</a>
+        <a href="javascript:void(0);" data-href="a.html">Page A</a>
+        <a href="javascript:void(0);" data-href="b.html">Page B</a>
     </nav>
 
     <div id="content"></div>
 
     <!-- Script -->
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+    <script>
+    $(document).ready(() => {
+
+        // Recup. des éléments <a>
+        $links = $('[data-href]');
+        $content = $('#content');
+
+        $links.each((index, link) => {
+            $(link).on('click', () => {
+
+                $url = $(link).data('href');
+
+                $.get($url).done((response) => {
+                    $content.html(response);
+
+                    switch ($url)
+                    {
+                        case 'b.html':
+                            $target = $('table').find('tbody');
+                            $template = $('template');
+                            
+                            $.get('b.php').done((response) => {
+                                $(response).each((index, item) => {
+                                    
+                                    $item = $template.html()
+                                        .replace(/{id}/, index)
+                                        .replace(/{brand}/, item)
+                                    ;
+
+                                    $target.append($item);
+
+                                });
+                                console.log(response);
+                                
+                            });
+                            break
+                    }
+                });
+
+            });
+        });
+
+        // console.log( $link );
+        
+        
+    });
+    </script>
 
 </body>
 </html>
